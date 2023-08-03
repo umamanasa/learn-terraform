@@ -42,8 +42,13 @@ variable "fruit_stock_with_price" {
 
 #Access a List Variable, List Index starts from ZERO
 output "fruits_first" {
-  value = "vars.fruits[0]"
+  value = var.fruits[0]
 }
 output "fruits_second" {
-  value = "vars.fruits[1]"
+  value = var.fruits[1]
+}
+
+#Access a Map Variable
+output "fruits_stock_apple" {
+  value = var.fruit_stock[ "apple" ]
 }
