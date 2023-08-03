@@ -1,4 +1,4 @@
-variable "frits" {
+variable "fruits" {
   default = [ "apple", "banana" ]
 }
 output "fruits" {
