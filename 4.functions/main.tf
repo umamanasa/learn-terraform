@@ -13,7 +13,7 @@ variable "fruits_with_stock" {
   }
 }
 output "fruits_stock" {
-  value = var.fruits_with_stock["banana"]
+  value = try(var.fruits_with_stock["banana"],0)
 }
 
 
