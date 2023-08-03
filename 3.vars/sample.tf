@@ -36,3 +36,7 @@ variable "fruit_stock_with_price" {
     }
   }
 }
+output "fruit_stock_with_price" {
+  value = var.fruit_stock_with_price
+}
+
