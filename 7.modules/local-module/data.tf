@@ -3,7 +3,7 @@ data "aws_ami" "ami" {
   name_regex  = "Centos-*"
   owners      = ["973714476881"]
 }
-output "ami" {
+output "aws_ami" {
   value = data.aws_ami
 }
 
