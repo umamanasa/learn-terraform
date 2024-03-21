@@ -6,10 +6,3 @@ resource "aws_instance" "web" {
     Name = "frontend"
   }
 }
-
-
-
-
-#output "test" {
-#  value = "Hello"
-#}
