@@ -14,54 +14,37 @@ variable "zone_id" {
   default = "Z0365188L7MG2LV8YN4J"
 }
 
-resource "aws_instance" "frontend" {
+variable "components" {
+  default = {
+    frontend = { name = "frontend-dev" }
+    mysql = { name = "mysql-dev" }
+    backend = { name = "backend-dev" }
+  }
+}
+
+resource "aws_instance" "instance" {
+  for_each = var.components
   ami           = var.ami
   instance_type = var.instance_type
   vpc_security_group_ids = var.security_group_ids
 
   tags = {
-    Name = "frontend"
+      Name = lookup(each.value, "name", null )
+    }
   }
-}
-resource "aws_route53_record" "frontend" {
+
+
+resource "aws_route53_record" "record" {
+  for_each = var.components
   zone_id = var.zone_id
-  name    = "frontend-dev.manasareddy.online"
+  name    = "${lookup(each.value, "name", null )}.manasareddy.online"
   type    = "A"
   ttl     = 30
-  records = [aws_instance.frontend.private_ip]
+#  records = [aws_instance.frontend.private_ip]
+  records = [ lookup(lookup(aws_instance.instance, each.key, null ), "private_ip", null) ]
 }
 
-resource "aws_instance" "mysql" {
-  ami           = var.ami
-  instance_type = var.instance_type
-  vpc_security_group_ids = var.security_group_ids
-
-  tags = {
-    Name = "mysql"
-  }
-}
-resource "aws_route53_record" "mysql" {
-  zone_id = var.zone_id
-  name    = "mysql-dev.manasareddy.online"
-  type    = "A"
-  ttl     = 30
-  records = [aws_instance.mysql.private_ip]
+output "instances" {
+  value = aws_instance.instance
 }
 
-
-resource "aws_instance" "backend" {
-  ami           = var.ami
-  instance_type = var.instance_type
-  vpc_security_group_ids = var.security_group_ids
-
-  tags = {
-    Name = "backend"
-  }
-}
-resource "aws_route53_record" "backend" {
-  zone_id = var.zone_id
-  name    = "backend-dev.manasareddy.online"
-  type    = "A"
-  ttl     = 30
-  records = [aws_instance.backend.private_ip]
-}
